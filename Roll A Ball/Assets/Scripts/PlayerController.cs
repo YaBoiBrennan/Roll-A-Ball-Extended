@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour {
     private int count;
     public GameObject cameraParent;
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour {
         SetCountText();
         winText.text = "";
     }
+
 
     void FixedUpdate()
     {
