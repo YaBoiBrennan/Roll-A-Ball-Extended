@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class PlayerController : MonoBehaviour {
 
     private Rigidbody rb;
     private int count;
+    public GameObject cameraParent;
 
     void Start()
     {
@@ -25,9 +27,28 @@ public class PlayerController : MonoBehaviour {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        float magnitude = (float)(Math.Pow(moveHorizontal, 2) + Math.Pow(moveVertical, 2));
+        float angle = cameraParent.transform.rotation.eulerAngles.y;
+        float radian = (float)((Math.PI / 180)) * angle;
 
-        rb.AddForce(movement * speed);
+        float finalX = (float)(magnitude * Math.Cos(radian));
+        float finalZ = (float)(magnitude * Math.Sin(radian));
+
+        Vector3 movement = new Vector3(finalZ, 0.0f, finalX);
+
+
+        if (moveVertical >= 0)
+        {
+            rb.AddForce(movement * speed);
+            Debug.DrawLine(transform.position, transform.position + movement, Color.red);
+        }
+        else
+        {
+            rb.AddForce(movement * speed * -1);
+            Debug.DrawLine(transform.position, transform.position - movement, Color.red);
+        }
+        //rb.velocity = movement * speed;
+
     }
 
     void OnTriggerEnter(Collider other)
